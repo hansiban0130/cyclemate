@@ -76,7 +76,8 @@
   .msg.sys{align-self:center;background:var(--warn-soft);color:#b8782e;font-size:12px;font-weight:800;text-align:center}
   .msg .tag{display:block;font-size:10px;color:var(--muted);margin-bottom:4px;text-transform:uppercase;letter-spacing:.06em;font-weight:900}
   .quick{display:flex;flex-wrap:wrap;gap:6px;margin-top:10px}
-  .quick button{font-size:12px;padding:8px 12px;border-radius:999px;border:none;background:var(--brand-soft);color:var(--brand);cursor:pointer;font-family:inherit;font-weight:800}
+  .quick button{font-size:12px;padding:8px 12px;border-radius:999px;border:2px solid transparent;background:var(--brand-soft);color:var(--brand);cursor:pointer;font-family:inherit;font-weight:800}
+  .quick button.on{background:var(--brand);color:#fff;border-color:var(--brand)}
   .inputrow{display:flex;gap:6px;margin-top:10px}
   .inputrow input{flex:1;padding:12px 14px;border-radius:999px;border:none;background:#fff;font-size:14px;font-family:inherit;font-weight:600}
   .inputrow button{padding:0 16px;border-radius:999px;border:none;background:var(--brand);color:#fff;font-weight:800;cursor:pointer;font-family:inherit}
@@ -261,7 +262,7 @@
         </div>
         <div class="muted" style="font-size:12px">Any symptoms? (optional)</div>
         <div class="quick">
-          <button onclick="this.classList.toggle('on')">Bloating</button><button>Headache</button><button>Pain</button><button>Can't sleep</button><button>Worried about cost</button>
+          <button class="sym" onclick="this.classList.toggle('on')">Bloating</button><button class="sym" onclick="this.classList.toggle('on')">Headache</button><button class="sym" onclick="this.classList.toggle('on')">Pain</button><button class="sym" onclick="this.classList.toggle('on')">Can't sleep</button><button class="sym" onclick="this.classList.toggle('on')">Worried about cost</button>
         </div>
         <button class="btn" onclick="submitMood()">Submit</button>
       </div>
@@ -427,9 +428,11 @@
   function submitMood(){
     const r=document.getElementById('ci-result');r.style.display='block';
     if(!m){r.innerHTML='<div class="muted">Pick a face first.</div>';return;}
-    if(m<=2){r.innerHTML='<span class="pill warn">Flagged</span><div style="margin-top:8px;font-size:14px">Thank you for telling us. This is the second low day in a row, so <b>your coordinator Malika will call you today</b>. You don\'t have to do anything.</div><button class="btn ghost small" onclick="go(\'ask\')">Message the clinic now</button>';toast('Coordinator notified (priority: high)');oySay('oy-ci','oy-ci-face','I\'ve told Malika. She\'ll call you today — you don\'t need to do anything.','soft');}
-    else if(m===3){r.innerHTML='<span class="pill brand">Logged</span><div style="margin-top:8px;font-size:14px">Day 7 is often the hardest stretch. Your next scan is Thursday — after that the plan becomes clearer.</div>';oySay('oy-ci','oy-ci-face','Day 7 is often the hardest stretch. Thursday\'s scan will make the plan clearer.','calm');}
-    else{r.innerHTML='<span class="pill ok">Logged</span><div style="margin-top:8px;font-size:14px">Good to hear. See you Thursday at 09:00.</div>';oySay('oy-ci','oy-ci-face','Noted. See you Thursday at 09:00.','happy');}
+    const syms=[...document.querySelectorAll('.sym.on')].map(b=>b.textContent);
+    const symLine=syms.length?'<div class="muted" style="margin-top:6px;font-size:12px">Symptoms noted: '+syms.join(', ')+(syms.includes('Worried about cost')?' — your coordinator will mention payment options when she calls.':'')+'</div>':'';
+    if(m<=2){r.innerHTML='<span class="pill warn">Flagged</span><div style="margin-top:8px;font-size:14px">Thank you for telling us. This is the second low day in a row, so <b>your coordinator Malika will call you today</b>. You don\'t have to do anything.</div>'+symLine+'<button class="btn ghost small" onclick="go(\'ask\')">Message the clinic now</button>';toast('Coordinator notified (priority: high)');oySay('oy-ci','oy-ci-face','I\'ve told Malika. She\'ll call you today — you don\'t need to do anything.','soft');}
+    else if(m===3){r.innerHTML='<span class="pill brand">Logged</span><div style="margin-top:8px;font-size:14px">Day 7 is often the hardest stretch. Your next scan is Thursday — after that the plan becomes clearer.</div>'+symLine+'';oySay('oy-ci','oy-ci-face','Day 7 is often the hardest stretch. Thursday\'s scan will make the plan clearer.','calm');}
+    else{r.innerHTML='<span class="pill ok">Logged</span><div style="margin-top:8px;font-size:14px">Good to hear. See you Thursday at 09:00.</div>'+symLine+'';oySay('oy-ci','oy-ci-face','Noted. See you Thursday at 09:00.','happy');}
   }
   const faq=[
     {k:/bring|thursday/i,a:'Bring your clinic card and ID. The scan and blood test take about 40 minutes. No injection needed before the visit — we do it there.'},

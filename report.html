@@ -1,0 +1,279 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>CycleMate — Project Report</title>
+<link href="https://fonts.googleapis.com/css2?family=Nunito:wght@600;700;800;900&display=swap" rel="stylesheet">
+<style>
+  @page{size:A4;margin:20mm 18mm 20mm 18mm}
+  :root{--ink:#3d3028;--muted:#8a7a6d;--brand:#d9655a;--brand-soft:#f8dcd4;--ok:#5fae84;--ok-soft:#dff0e4;--warn-soft:#fbe8cf;--night:#5a4a62;--line:#e6dacb;--bg:#f7f1e9}
+  *{box-sizing:border-box}
+  body{margin:0;font-family:"Nunito",sans-serif;color:var(--ink);font-size:10.5pt;line-height:1.5;-webkit-print-color-adjust:exact;print-color-adjust:exact}
+  @media screen{body{background:#e8dccc;padding:30px 0}.page{width:210mm;margin:0 auto;background:#fff;padding:20mm 18mm;box-shadow:0 10px 40px rgba(0,0,0,.2)}}
+  h1{font-size:22pt;font-weight:900;color:var(--brand);margin:0 0 2mm;letter-spacing:-.01em}
+  h2{font-size:13.5pt;font-weight:900;margin:9mm 0 3mm;color:var(--ink);padding-bottom:1.5mm;border-bottom:2px solid var(--brand-soft);page-break-after:avoid}
+  h2 span{color:var(--brand);margin-right:2mm}
+  h3{font-size:11pt;font-weight:900;margin:5mm 0 1.5mm;color:var(--night);page-break-after:avoid}
+  p{margin:0 0 2.5mm}
+  ul,ol{margin:0 0 2.5mm;padding-left:5.5mm}
+  li{margin-bottom:1mm}
+  b{font-weight:800}
+  .cover{background:var(--bg);border-radius:6mm;padding:8mm 9mm;margin-bottom:6mm;display:flex;gap:7mm;align-items:center}
+  .cover svg{width:30mm;height:30mm;flex:none}
+  .cover .t{font-size:12.5pt;font-weight:800;margin-top:1mm}
+  .cover .m{font-size:9.5pt;color:var(--muted);font-weight:700;margin-top:2mm;line-height:1.5}
+  table{width:100%;border-collapse:collapse;margin:2mm 0 4mm;font-size:9.5pt}
+  tr{page-break-inside:avoid}
+  th{background:var(--bg);text-align:left;padding:2mm 2.5mm;font-weight:900;font-size:8.5pt;letter-spacing:.06em;text-transform:uppercase;color:var(--muted)}
+  td{padding:2mm 2.5mm;border-bottom:1px solid var(--line);vertical-align:top}
+  td:first-child{font-weight:800;width:30%}
+  .stats{display:grid;grid-template-columns:repeat(3,1fr);gap:3mm;margin:3mm 0 4mm}
+  .stat{background:var(--brand-soft);border-radius:4mm;padding:3.5mm 3mm;text-align:center}
+  .stat .v{font-size:19pt;font-weight:900;color:var(--brand);line-height:1}
+  .stat .l{font-size:8.5pt;font-weight:800;margin-top:1.5mm;line-height:1.3}
+  .stat .s{font-size:7.5pt;color:var(--muted);font-weight:700;margin-top:1mm}
+  .callout{background:var(--bg);border-left:4px solid var(--brand);border-radius:0 4mm 4mm 0;padding:3mm 4mm;margin:3mm 0 4mm;font-size:10pt}
+  .callout.dark{background:var(--night);color:#fff;border-left-color:#ffd27a}
+  .callout.ok{border-left-color:var(--ok);background:var(--ok-soft)}
+  .diag{display:grid;grid-template-columns:1fr auto 1.2fr auto 1fr;align-items:center;gap:2.5mm;margin:3mm 0 4mm;page-break-inside:avoid}
+  .node{border-radius:4mm;padding:3mm;text-align:center;font-size:9pt;font-weight:800;line-height:1.3}
+  .node small{display:block;font-weight:700;color:var(--muted);font-size:8pt;margin-top:1mm}
+  .node.p{background:var(--brand-soft)}.node.s{background:#fff;border:.6mm solid var(--brand)}.node.c{background:var(--ok-soft)}
+  .arrow{font-size:15pt;color:var(--muted);font-weight:900;text-align:center}
+  .timeline{display:grid;grid-template-columns:repeat(4,1fr);gap:2.5mm;margin:2mm 0 4mm}
+  .timeline div{background:var(--bg);border-radius:4mm;padding:2.5mm 3mm;font-size:9pt;line-height:1.35}
+  .timeline b{display:block;color:var(--brand);font-size:8.5pt;letter-spacing:.04em;margin-bottom:.8mm}
+  .screens{display:grid;grid-template-columns:repeat(2,1fr);gap:3mm 5mm;margin:2mm 0 4mm;font-size:9.5pt}
+  .screens div{padding:2.5mm 3mm;background:var(--bg);border-radius:4mm;page-break-inside:avoid}
+  .screens b{display:block;color:var(--night);margin-bottom:.8mm}
+  .moons{display:flex;justify-content:space-between;background:var(--night);border-radius:5mm;padding:4mm 5mm;margin:3mm 0 4mm;page-break-inside:avoid}
+  .moons div{text-align:center;font-size:8pt;color:#d8cde0;font-weight:800;line-height:1.3}
+  .moons div b{display:block;color:#fff}
+  .moons svg{width:12mm;height:12mm;display:block;margin:0 auto 1.5mm}
+  .moons div.now,.moons div.now b{color:#ffd27a}
+  .refs{font-size:9pt;line-height:1.45}
+  .refs li{margin-bottom:1.5mm}
+  .small{font-size:9pt;color:var(--muted);font-weight:700}
+  .pb{page-break-before:always}
+  .foot{margin-top:8mm;padding-top:3mm;border-top:1px solid var(--line);font-size:8.5pt;color:var(--muted);font-weight:700}
+</style>
+</head>
+<body>
+<div class="page">
+
+<div class="cover">
+  <span data-oy="happy" data-phase="7"></span>
+  <div>
+    <h1>CycleMate</h1>
+    <div class="t">Helping IVF patients finish the treatment they started</div>
+    <div class="m">AI in Medicine &amp; Biostatistics · Mid-term project: My (Digital) Health App<br>Written report · Hans · 30 October 2026<br>Deliverables: this report · A3 poster · clickable web prototype (CycleMate_prototype.html)</div>
+  </div>
+</div>
+
+<p class="small">This report combines the three written deliverables of the brief — the concept note (Part 1), the documentation of design choices (Part 2) and the evaluation report (Part 3) — in one document.</p>
+
+<!-- ===================== PART 1 ===================== -->
+<h2><span>1</span>Concept note</h2>
+
+<h3>1.1 The health problem</h3>
+<p><b>Infertility</b> affects roughly one in six adults worldwide (WHO, 2023). In vitro fertilisation (IVF) is an effective treatment, but it only works for patients who complete the cycle — and a substantial share do not.</p>
+<p><b>The gap CycleMate addresses:</b> up to one in five IVF patients discontinue treatment before completing it, and the leading reason is not medical failure or poor prognosis but the <b>burden of the treatment itself</b>. Most patients who drop out do not seek care elsewhere afterwards (Domar et al., 2018) — so treatable infertility is left untreated.</p>
+<div class="stats">
+  <div class="stat"><div class="v">17%</div><div class="l">of couples dropped out mid-treatment</div><div class="s">Verberg et al. 2008 · prospective cohort, n = 384</div></div>
+  <div class="stat"><div class="v">19–28%</div><div class="l">named physical / psychological burden as the reason</div><div class="s">Gameiro et al. 2012 · 22 studies, n = 21,453; Verberg 2008</div></div>
+  <div class="stat"><div class="v">18–27%</div><div class="l">of women show clinical anxiety or depression during IVF</div><div class="s">Cross-sectional study, China 2025 · n = 2,465</div></div>
+</div>
+<p>Anxiety is not constant: in the E-Freeze randomised trial (UK) both women and men were more anxious at embryo transfer than at the start of treatment. The hardest days come late in the cycle, when patients have the fewest clinic contacts.</p>
+<div class="callout">The disease is infertility. CycleMate does not treat it; it removes the reasons why treatable patients stop being treated.</div>
+
+<h3>1.2 What "burden" is, concretely</h3>
+<p>From the literature and from day-to-day experience at a fertility clinic in Tashkent, the burden has four recurring components:</p>
+<ol>
+  <li><b>Uncertainty</b> — patients do not know what happens next, how long each phase lasts, or whether a symptom is normal.</li>
+  <li><b>Daily load</b> — clinic visits for stimulation injections, home medication (oral tablets, vaginal progesterone), and a trigger injection that must be given at an exact time, usually at night.</li>
+  <li><b>Feeling alone between visits</b> — distress builds silently; patients rarely ask for help, they simply stop coming.</li>
+  <li><b>Nowhere to ask a small question</b> — contact runs through phone calls and messenger DMs, so small questions either go unasked or land on the wrong person.</li>
+</ol>
+<p>Two further pressures are specific to the Uzbekistan context: <b>distance</b> (many patients live hundreds of kilometres from Tashkent and cannot attend daily) and <b>cost uncertainty</b>, which in some settings is the single largest reason for discontinuation (Kulkarni et al., 2014: 62.5%).</p>
+
+<h3>1.3 Who will use it</h3>
+<table>
+  <tr><th>User</th><th>Role in CycleMate</th><th>Need</th></tr>
+  <tr><td>Patients in an IVF cycle (primary)</td><td>Daily use: timeline, tasks, check-in, questions</td><td>Know where I am, what to do today, and that someone is watching</td></tr>
+  <tr><td>Clinic coordinators</td><td>Coordinator view: ranked call list, patient status</td><td>Find the patient who needs a call <i>before</i> she stops coming</td></tr>
+  <tr><td>Doctors</td><td>Doctor queue: medical questions only</td><td>Answer what needs a doctor; nothing else reaches them</td></tr>
+  <tr><td>Partners (optional, consented)</td><td>Read-only schedule</td><td>Understand the process and support rather than question it</td></tr>
+</table>
+
+<h3>1.4 What the app does — one burden, one feature</h3>
+<table>
+  <tr><th>Burden</th><th>Feature</th><th>Goal</th></tr>
+  <tr><td>Uncertainty</td><td><b>Cycle timeline</b> — current day, next step, estimated dates, shown as a moon that waxes with the cycle</td><td>Patient can place herself in the cycle at a glance</td></tr>
+  <tr><td>Daily load</td><td><b>Today's plan</b> — never more than three tasks: clinic visit, home medication, trigger-shot countdown</td><td>Nothing missed, nothing extra to remember</td></tr>
+  <tr><td>Feeling alone</td><td><b>10-second check-in</b> — mood 1–5 plus optional symptom chips; two low days in a row flag the coordinator, who calls first</td><td>Distress is noticed before it becomes drop-out</td></tr>
+  <tr><td>Nowhere to ask</td><td><b>Ask the clinic</b> — the companion (Oy) answers general questions from the clinic FAQ; medical questions are routed to the doctor</td><td>Every question reaches the right person</td></tr>
+  <tr><td>Cost worry</td><td><b>Running cost total</b> — paid so far and estimated remaining</td><td>Money problems surface early, in conversation, not at the desk</td></tr>
+</table>
+
+<h3>1.5 How it works — system overview</h3>
+<div class="diag">
+  <div class="node p">Patient<small>web app, any phone<br>phone-number login (SMS code)</small></div>
+  <div class="arrow">⇄</div>
+  <div class="node s">Clinic server<small>encrypted · hosted by the clinic<br>consent-scoped sharing</small></div>
+  <div class="arrow">⇄</div>
+  <div class="node c">Coordinator &amp; doctor<small>ranked call list · doctor queue</small></div>
+</div>
+<p>Data flows in one direction by default — from patient to clinic — and only within the scope the patient consented to. The two AI components sit on the clinic side: a <b>question router</b> (general vs. medical) and a <b>call-list ranking</b> (mood trend + missed tasks + unanswered questions). Neither touches treatment; see Part 2.4.</p>
+
+<h3>1.6 Project management</h3>
+<div class="timeline">
+  <div><b>27–28 OCT</b>Problem definition, evidence review, feature mapping, concept agreed</div>
+  <div><b>29 OCT (AM)</b>Clickable prototype v1 → v3; companion character; visual language</div>
+  <div><b>29 OCT (PM)</b>Usability walkthrough with clinic coordinator; feedback applied; poster</div>
+  <div><b>30 OCT</b>Report, presentation rehearsal, submission 13:00</div>
+</div>
+<p><b>Team and resources.</b> Single-student project. Resources used: published literature (PubMed / clinical-trial registries), a working fertility clinic as domain source, a web browser for the prototype (HTML/CSS/JS, no backend), and Google Fonts. No patient data of any kind was used.</p>
+
+<!-- ===================== PART 2 ===================== -->
+<h2 class="pb"><span>2</span>Prototype and design choices</h2>
+
+<h3>2.1 Form: a web app, not a native app</h3>
+<p>CycleMate is built as a mobile web application. This is an equity decision before it is a technical one: it runs on any low-end Android phone through the browser, needs no app-store account, no storage space and no update, and can fall back to SMS for reminders when the patient is offline. For a clickable prototype the same choice means the demo runs from a single HTML file on any laptop or phone.</p>
+
+<h3>2.2 Screens</h3>
+<div class="screens">
+  <div><b>Login &amp; verification</b>Phone number registered at the clinic + 6-digit SMS code. No usernames, no passwords to forget, no shared accounts.</div>
+  <div><b>Consent</b>Three toggles, in plain language: share check-ins with the clinic (required), share the schedule with a partner (optional), contribute anonymised data (optional). The "how we protect your data" summary is on this screen, not buried in settings.</div>
+  <div><b>Home</b>Oy with a one-line message, cycle day, next appointment, the five-phase moon strip, Today's plan (max 3 tasks), upcoming home tasks (trigger injection), running cost.</div>
+  <div><b>Cycle</b>Nine steps from baseline scan to pregnancy test; done / now / estimated. A "visits needed" box states that only four visits are essential for patients outside Tashkent.</div>
+  <div><b>Check-in</b>Five faces, optional symptom chips (including "worried about cost"), a seven-day mood strip. Oy's message changes with the chosen mood; a low score on the second consecutive day triggers the flag and tells the patient a coordinator will call.</div>
+  <div><b>Ask the clinic</b>Chat with Oy. General questions get an FAQ answer; anything about doses, results, bleeding or pain is marked "forwarded to the doctor" and Oy says explicitly that it cannot answer. Unknown questions are forwarded, not guessed.</div>
+  <div><b>Coordinator view</b>Patients sorted by who needs a call first, with the reason (mood 2→1 for two days; missed progesterone; unanswered question), plus the doctor queue. The screen states that ranking only orders the call list and never changes treatment.</div>
+  <div><b>Language</b>EN / UZ / RU switch in the header. Only the English copy is implemented in the prototype; the switch shows the intended accessibility.</div>
+</div>
+
+<h3>2.3 Oy — the companion, and why it is a moon</h3>
+<p>The single most important UX decision in CycleMate is the character <b>Oy</b> ("moon" in Uzbek), and it was chosen for three reasons.</p>
+<ol>
+  <li><b>A lunar month and an IVF cycle are both about 28 days.</b> Oy waxes through ovarian stimulation, is full at embryo transfer, and wanes toward the pregnancy test. One glance at the moon tells a patient where she is in the cycle — without a calendar, without reading, in any language.</li>
+  <li><b>Calm by design.</b> Medical apps commonly rely on alerts, red badges and countdowns, all of which raise anxiety in a population whose anxiety is already clinically elevated. Oy replaces those cues with a soft, familiar presence that reacts to how the patient feels: it says "Heavy day. That's allowed." on a low check-in, and "That's everything for today" when the last task is ticked. The aim is that opening the app lowers fear rather than adding to it.</li>
+  <li><b>A moon, not an embryo.</b> An early idea was a cute embryo character. It was rejected on ethical grounds: a large share of cycles fail, and a character the patient has bonded with would become a symbol of loss. Oy stands for the <i>cycle</i>, not the outcome — if a cycle fails, the moon simply begins again. Patients are never asked to attach to an embryo.</li>
+</ol>
+<div class="moons">
+  <div><span data-moon="1"></span><b>Day 1</b>baseline</div>
+  <div class="now"><span data-moon="7"></span><b>Day 7</b>stimulation</div>
+  <div><span data-moon="14"></span><b>Day 14</b>retrieval</div>
+  <div><span data-moon="19"></span><b>Day 19</b>transfer</div>
+  <div><span data-moon="28"></span><b>Day 28</b>test</div>
+</div>
+<p>The visual language follows the same principle: warm beige backgrounds, rounded cards, a coral accent used only for primary actions, and no red anywhere in the patient interface.</p>
+
+<h3>2.4 Data: collection, storage, protection</h3>
+<table>
+  <tr><th>Question</th><th>Design</th></tr>
+  <tr><td>What is collected</td><td>Cycle schedule (entered by the clinic), task completion, daily mood score and optional symptom chips, chat messages. Nothing else — no location, no contacts, no device data.</td></tr>
+  <tr><td>Who can see it</td><td>The patient and the clinic team, always. The partner only if the patient enables it, and then only the schedule — never mood or messages. Anonymised aggregate data only with separate consent.</td></tr>
+  <tr><td>Where it is stored</td><td>On a server operated by the clinic, inside Uzbekistan; no third-party analytics or cloud AI service receives patient text.</td></tr>
+  <tr><td>How it is protected</td><td>Encrypted in transit (TLS) and at rest; phone-number login with one-time SMS code; session expiry; role-based access (coordinator sees status, doctor sees medical queue).</td></tr>
+  <tr><td>How long it is kept</td><td>Deleted 12 months after the cycle ends, or immediately on request.</td></tr>
+</table>
+
+<h3>2.5 AI, APIs and integration</h3>
+<p>CycleMate uses two narrow AI components, both on the clinic side and both deliberately limited:</p>
+<ul>
+  <li><b>Question router.</b> A text classifier labels each incoming message as <i>general</i> (appointments, what to bring, what a step involves) or <i>medical</i> (doses, results, symptoms needing judgement). General questions are answered from the clinic's own FAQ; medical questions and anything the classifier is unsure about are forwarded to a human. The prototype implements this with keyword rules; a production version would use a small language model fine-tuned on anonymised clinic FAQs, with the same hard rule: when unsure, forward.</li>
+  <li><b>Call-list ranking.</b> A simple score combining mood trend over the last three check-ins, missed home tasks and unanswered questions orders the coordinator's list. It changes who is called first; it does not label, diagnose or alter treatment.</li>
+</ul>
+<div class="callout dark">The AI never diagnoses, never changes a dose, never interprets a result. Every clinical decision stays with the medical team. The companion exists to reduce fear, not to replace a clinician.</div>
+<p><b>Integration.</b> The prototype is stand-alone. The planned next step is a read-only connection to the clinic's electronic record so that scheduled visits and medication plans populate the timeline automatically, and an SMS gateway for offline reminders. No connection to national health systems is planned at this stage.</p>
+
+<h3>2.6 Feedback and what changed</h3>
+<p>The prototype was walked through with a <b>clinic coordinator</b> at a fertility clinic in Tashkent, screen by screen, in the coordinator's working environment.</p>
+<div class="callout ok"><b>Coordinator:</b> "Patients who are struggling rarely message us — they just stop coming."<br><b>Change:</b> the check-in logic was inverted. Instead of offering the patient a button to ask for help, two consecutive low check-ins now flag the coordinator, who calls the patient first. This became the core mechanism of the app.</div>
+<p>Two further points from the same session were already covered by the design and were confirmed rather than changed: that roughly half of the questions coordinators receive are about doses and should go straight to the doctor (→ question router), and that cost is the most difficult conversation and usually comes too late (→ running total and the "worried about cost" chip).</p>
+<p><b>Self-review (v1 → v3).</b> The first prototype used a neutral timer-style interface. It worked, but it read as clinical and cold for an audience whose problem is anxiety. Version 3 added Oy, the warm palette and the "one task at a time" rule.</p>
+
+<!-- ===================== PART 3 ===================== -->
+<h2 class="pb"><span>3</span>Evaluation</h2>
+
+<h3>3.1 Usability check</h3>
+<p>Formal usability testing with patients was out of scope for a two-day prototype and would require ethics approval. Instead an <b>informal usability walkthrough</b> was run with the clinic coordinator (n = 1) plus the author, covering every screen and the three main flows: completing today's plan, submitting a low check-in and seeing the flag, and asking a medical question and seeing it forwarded.</p>
+<table>
+  <tr><th>Flow</th><th>Result</th></tr>
+  <tr><td>Login → consent → home</td><td>Completed without instruction. Consent screen understood as "what the clinic sees"; partner toggle was the first thing the coordinator asked about ("patients will want this").</td></tr>
+  <tr><td>Today's plan → tick tasks</td><td>Immediate. Oy's "that's everything for today" was noticed and liked.</td></tr>
+  <tr><td>Low check-in → flag</td><td>The flag message ("your coordinator will call you today, you don't need to do anything") was judged the single most useful element.</td></tr>
+  <tr><td>Medical question → forwarded</td><td>Routing was understood at once; the coordinator confirmed this matches how questions should move inside the clinic.</td></tr>
+  <tr><td>Coordinator view</td><td>Ranked list matched how the coordinator already prioritises informally; the "reason" line next to each name was requested to stay.</td></tr>
+</table>
+<p><b>Conclusion of the session:</b> the coordinator's assessment was that the workflow is realistic as it stands and <b>could be run in actual clinical practice</b> with the clinic's current team, without changing how the clinic works — the app formalises what the coordinator already tries to do by hand. The proposed next step is a small pilot (Part 3.5).</p>
+<p class="small">Limitation: n = 1 and no patients were involved. The results indicate that the design is coherent for clinic staff; patient-side usability, especially for low-literacy and older users, remains untested.</p>
+
+<h3>3.2 How the app handles errors</h3>
+<table>
+  <tr><th>Situation</th><th>Behaviour</th></tr>
+  <tr><td>Unknown or ambiguous question</td><td>Forwarded to a human with a visible "not sure — sent to your coordinator" label. The assistant never guesses.</td></tr>
+  <tr><td>Medical question</td><td>Never answered by the assistant; forwarded to the doctor queue with a clear message to the patient not to change anything on her own.</td></tr>
+  <tr><td>Patient offline</td><td>Tasks are cached on the device; reminders fall back to SMS; check-ins sync when back online.</td></tr>
+  <tr><td>Wrong or unknown phone number</td><td>No account is created and nothing is revealed about whether a number exists.</td></tr>
+  <tr><td>Schedule changes (dates move)</td><td>Future dates are always labelled "estimated"; the clinic updates the timeline and the patient sees the change with a short note from Oy, not an alarm.</td></tr>
+  <tr><td>Flag not acted on</td><td>If a flagged patient has not been contacted within one working day, the flag escalates to the senior coordinator.</td></tr>
+</table>
+
+<h3>3.3 Privacy, security and ethical rules</h3>
+<ul>
+  <li><b>Minimum data.</b> Only what the features need; no tracking, no advertising identifiers.</li>
+  <li><b>Consent is specific and reversible.</b> Separate toggles for clinic, partner and anonymised use, changeable at any time.</li>
+  <li><b>Clinic-hosted, in-country.</b> No patient text leaves the clinic's infrastructure; no third-party cloud AI.</li>
+  <li><b>AI has a hard boundary.</b> General information only; medical questions and uncertain cases go to a human; ranking changes call order, never care.</li>
+  <li><b>No labels.</b> A flag is an instruction to the coordinator, not a diagnosis of the patient, and is never shown to anyone outside the care team.</li>
+  <li><b>Designed for failure.</b> The companion represents the cycle, not the outcome, so a failed cycle does not turn the app into a reminder of loss.</li>
+  <li><b>Not a medical device.</b> CycleMate gives no clinical advice and would be positioned as a patient-support tool, outside medical-device regulation; this would be confirmed with the relevant Uzbek authority before any pilot.</li>
+</ul>
+
+<h3>3.4 Health, access and equity</h3>
+<p><b>Health.</b> The target outcome is <b>cycle completion rate</b>. If the burden-related share of drop-out (roughly one fifth of all discontinuations, and up to 28% in some cohorts) can be reduced even partly, more patients reach embryo transfer and a pregnancy test — the only point at which IVF can succeed. Secondary outcomes: check-in trend over the cycle, time from first low check-in to clinic contact, and number of proactive calls made.</p>
+<p><b>Access.</b> Web-based delivery works on any phone; SMS fallback covers patients without stable data. For patients outside Tashkent, the timeline makes explicit that only four visits are essential and that daily injections can be arranged at a partner clinic — turning "I can't come every day" from a reason to quit into a plan.</p>
+<p><b>Equity.</b> Three languages (EN / UZ / RU), icons and one task per screen for low-literacy users, and an optional partner mode so that a spouse who influences whether treatment continues can understand the process instead of questioning it.</p>
+
+<h3>3.5 How it could grow</h3>
+<ol>
+  <li><b>Pilot:</b> 20 patients, one full cycle, at one clinic; compare completion and check-in data with the previous 20 cycles.</li>
+  <li><b>EMR integration</b> so schedules and medication plans populate automatically.</li>
+  <li><b>Partner-clinic network</b> for regional patients (injections and basic monitoring close to home).</li>
+  <li><b>Full UZ / RU localisation</b>, voice prompts for low-literacy users.</li>
+  <li><b>Male-factor module</b> — a timeline and check-in for male patients, who are currently left out of most fertility apps.</li>
+  <li><b>Open the companion</b> to other long, anxious treatment journeys (oncology, antenatal care) where the same "cycle, not outcome" logic applies.</li>
+</ol>
+
+<h2><span>4</span>References</h2>
+<ol class="refs">
+  <li>Verberg MFG, Eijkemans MJC, Heijnen EMEW, et al. Why do couples drop-out from IVF treatment? A prospective cohort study. <i>Human Reproduction</i>. 2008;23(9):2050–2055.</li>
+  <li>Gameiro S, Boivin J, Peronace L, Verhaak CM. Why do patients discontinue fertility treatment? A systematic review of reasons and predictors of discontinuation in fertility treatment. <i>Human Reproduction Update</i>. 2012;18(6):652–669.</li>
+  <li>Domar AD, Rooney K, Hacker MR, Sakkas D, Dodge LE. Burden of care is the primary reason why insured women terminate in vitro fertilization treatment. <i>Fertility and Sterility</i>. 2018;109(6):1121–1126.</li>
+  <li>Kulkarni G, Mohanty NC, Mohanty IR, Jadhav P, Boricha BG. Survey of reasons for discontinuation from in vitro fertilization treatment among couples attending infertility clinic. <i>Journal of Human Reproductive Sciences</i>. 2014;7(4):269–274.</li>
+  <li>World Health Organization. <i>Infertility Prevalence Estimates, 1990–2021</i>. Geneva: WHO; 2023.</li>
+  <li>E-Freeze Trial Group, NPEU, University of Oxford. Anxiety in couples undergoing IVF: evidence from the E-Freeze randomised controlled trial. 2022.</li>
+  <li>Factors influencing the anxiety and depression status in patients undergoing IVF-ET: a cross-sectional study of 2,465 women. China, 2025.</li>
+  <li>Huisman D, Raymakers X, Hoomans EH. Understanding the burden of ovarian stimulation: fertility expert and patient perceptions. <i>Reproductive BioMedicine Online</i>. 2009;19(Suppl 2):5–10. (Patient self-injection compliance, French multicentre study.)</li>
+  <li>Bohr A, Memarzadeh K. <i>Artificial Intelligence in Healthcare</i>. Academic Press; 2020. (Course core reading.)</li>
+</ol>
+
+<div class="foot">CycleMate · prototype for coursework · not a medical device · no patient data was used in this project</div>
+</div>
+
+<script>
+  function moonSVG(day, mood){
+    const full=19; let p = day<=full ? day/full : Math.max(0,1-(day-full)/(28-full));
+    const r=40, cx=50, cy=50; const k=(0.5-p)*2; const rx=Math.abs(k)*r; const lit=p>=0.5;
+    const path=`M${cx},${cy-r} A${r},${r} 0 0 1 ${cx},${cy+r} A${rx},${r} 0 0 ${lit?1:0} ${cx},${cy-r} Z`;
+    const S='stroke="#5a4232" stroke-width="3.5" fill="none" stroke-linecap="round"';
+    const faces={happy:`<path d="M38 50 q4 -5 8 0" ${S}/><path d="M54 50 q4 -5 8 0" ${S}/><path d="M44 60 q6 6 12 0" ${S}/>`};
+    const face=mood?`<circle cx="36" cy="57" r="4" fill="#f4a09a" opacity=".85"/><circle cx="64" cy="57" r="4" fill="#f4a09a" opacity=".85"/>${faces[mood]}`:'';
+    return `<svg viewBox="0 0 100 100"><circle cx="${cx}" cy="${cy}" r="${r}" fill="${mood?'#c9b5c9':'#7d6b86'}"/><path d="${path}" fill="#ffd27a"/><circle cx="${cx}" cy="${cy}" r="${r}" fill="none" stroke="#ffd27a" stroke-opacity=".4" stroke-width="2"/>${face}</svg>`;
+  }
+  document.querySelectorAll('[data-oy]').forEach(el=>{el.innerHTML=moonSVG(+(el.dataset.phase||7),el.dataset.oy);});
+  document.querySelectorAll('[data-moon]').forEach(el=>{el.innerHTML=moonSVG(+el.dataset.moon,null);});
+</script>
+</body>
+</html>

@@ -1,0 +1,462 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>CycleMate Prototype</title>
+<link href="https://fonts.googleapis.com/css2?family=Nunito:wght@500;700;800;900&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --bg:#efe4d6; --card:#fbf6ef; --ink:#4a3b33; --muted:#9a8a7d;
+    --brand:#d9655a; --brand-soft:#f8dcd4; --ok:#5fae84; --ok-soft:#dff0e4;
+    --warn:#e39a4a; --warn-soft:#fbe8cf; --danger:#d9655a; --danger-soft:#f8dcd4;
+    --line:#eadfd2; --radius:22px; --night:#5a4a62; --night2:#3f3550;
+    --shadow:0 10px 24px rgba(120,90,60,.12), 0 2px 6px rgba(120,90,60,.06);
+  }
+  *{box-sizing:border-box}
+  body{margin:0;background:#e8dccc;font-family:"Nunito",-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,Helvetica,Arial,sans-serif;color:var(--ink);display:flex;justify-content:center;align-items:flex-start;gap:32px;padding:24px 16px;min-height:100vh}
+  .phone{width:390px;height:780px;background:#f6efe6;border-radius:48px;padding:12px;box-shadow:0 24px 60px rgba(110,80,50,.25), inset 0 0 0 2px #e2d5c5;flex:none}
+  .screen{background:var(--bg);border-radius:38px;height:100%;overflow:hidden;position:relative;display:flex;flex-direction:column}
+  .topbar{background:transparent;padding:18px 20px 8px;display:flex;align-items:center;justify-content:space-between}
+  .topbar h1{font-size:20px;margin:0;font-weight:900}
+  .topbar .sub{font-size:12px;color:var(--muted);font-weight:700}
+  .lang{display:flex;gap:4px}
+  .lang button{font-size:11px;padding:4px 8px;border:none;background:#fff8f0;border-radius:999px;color:var(--muted);cursor:pointer;font-weight:800;font-family:inherit}
+  .lang button.on{background:var(--brand);color:#fff}
+  .content{flex:1;overflow-y:auto;padding:12px 16px 96px}
+  .card{background:var(--card);border-radius:var(--radius);padding:18px;margin-bottom:14px;border:none;box-shadow:var(--shadow)}
+  .card h2{font-size:12px;margin:0 0 10px;color:var(--muted);font-weight:900;text-transform:uppercase;letter-spacing:.08em}
+  .big{font-size:40px;font-weight:900;line-height:1.05}
+  .muted{color:var(--muted);font-size:13px;font-weight:600}
+  .pill{display:inline-block;padding:5px 11px;border-radius:999px;font-size:12px;font-weight:800}
+  .pill.brand{background:var(--brand-soft);color:var(--brand)}
+  .pill.ok{background:var(--ok-soft);color:var(--ok)}
+  .pill.warn{background:var(--warn-soft);color:var(--warn)}
+  .pill.danger{background:var(--danger-soft);color:var(--danger)}
+  .btn{display:block;width:100%;padding:16px;border:none;border-radius:999px;background:var(--brand);color:#fff;font-size:17px;font-weight:800;cursor:pointer;margin-top:12px;font-family:inherit;box-shadow:0 8px 18px rgba(217,101,90,.3)}
+  .btn.ghost{background:#fff8f0;color:var(--brand);box-shadow:none}
+  .btn.small{padding:11px;font-size:14px;margin-top:8px}
+  .task{display:flex;align-items:center;gap:12px;padding:12px 0;border-bottom:1.5px dashed var(--line)}
+  .task:last-child{border-bottom:none}
+  .task .box{width:30px;height:30px;border-radius:12px;border:2.5px solid #e5d8c8;background:#fff;display:flex;align-items:center;justify-content:center;font-size:16px;cursor:pointer;flex:none}
+  .task.done .box{background:var(--ok);border-color:var(--ok);color:#fff}
+  .task.done .t{text-decoration:line-through;color:var(--muted)}
+  .task .t{flex:1;font-size:15px;font-weight:700}
+  .task .when{font-size:12px;color:var(--muted);font-weight:600}
+  .nav{position:absolute;bottom:14px;left:16px;right:16px;background:#fff8f0;border-radius:999px;display:flex;padding:8px 6px;box-shadow:var(--shadow)}
+  .nav button{flex:1;background:none;border:none;font-size:10px;color:var(--muted);cursor:pointer;padding:4px 0;font-family:inherit;font-weight:800;border-radius:999px}
+  .nav button span{display:block;font-size:19px;margin-bottom:1px}
+  .nav button.on{color:var(--brand);background:var(--brand-soft)}
+  .view{display:none}
+  .view.on{display:block}
+  /* timeline */
+  .tl{position:relative;padding-left:28px}
+  .tl::before{content:"";position:absolute;left:9px;top:6px;bottom:6px;width:2px;background:var(--line)}
+  .tl .step{position:relative;padding:8px 0 14px}
+  .tl .step::before{content:"";position:absolute;left:-24px;top:12px;width:12px;height:12px;border-radius:50%;background:#fff;border:2px solid var(--line)}
+  .tl .step.done::before{background:var(--ok);border-color:var(--ok)}
+  .tl .step.now::before{background:var(--brand);border-color:var(--brand);box-shadow:0 0 0 4px var(--brand-soft)}
+  .tl .step .n{font-weight:700;font-size:15px}
+  .tl .step.now .n{color:var(--brand)}
+  .tl .step .d{font-size:12px;color:var(--muted)}
+  /* check-in */
+  .moods{display:flex;justify-content:space-between;margin:12px 0}
+  .moods button{width:56px;height:66px;border-radius:18px;border:2.5px solid transparent;background:#fff;font-size:26px;cursor:pointer;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:2px;box-shadow:0 3px 8px rgba(120,90,60,.08)}
+  .moods button small{font-size:10px;color:var(--muted);font-weight:800}
+  .moods button.on{border-color:var(--brand);background:var(--brand-soft)}
+  .bars{display:flex;gap:6px;align-items:flex-end;height:60px;margin-top:8px}
+  .bars div{flex:1;background:#f3c7a0;border-radius:8px 8px 3px 3px;position:relative}
+  .bars div.low{background:#e9b6ad}
+  .bars div i{position:absolute;bottom:-18px;left:0;right:0;text-align:center;font-size:10px;color:var(--muted);font-style:normal}
+  /* chat */
+  .chat{display:flex;flex-direction:column;gap:8px}
+  .msg{max-width:85%;padding:11px 14px;border-radius:18px;font-size:14px;line-height:1.4;font-weight:600}
+  .msg.me{align-self:flex-end;background:var(--brand);color:#fff;border-bottom-right-radius:6px}
+  .msg.bot{align-self:flex-start;background:#fff;border-bottom-left-radius:6px;box-shadow:0 3px 8px rgba(120,90,60,.08)}
+  .msg.sys{align-self:center;background:var(--warn-soft);color:#b8782e;font-size:12px;font-weight:800;text-align:center}
+  .msg .tag{display:block;font-size:10px;color:var(--muted);margin-bottom:4px;text-transform:uppercase;letter-spacing:.06em;font-weight:900}
+  .quick{display:flex;flex-wrap:wrap;gap:6px;margin-top:10px}
+  .quick button{font-size:12px;padding:8px 12px;border-radius:999px;border:none;background:var(--brand-soft);color:var(--brand);cursor:pointer;font-family:inherit;font-weight:800}
+  .inputrow{display:flex;gap:6px;margin-top:10px}
+  .inputrow input{flex:1;padding:12px 14px;border-radius:999px;border:none;background:#fff;font-size:14px;font-family:inherit;font-weight:600}
+  .inputrow button{padding:0 16px;border-radius:999px;border:none;background:var(--brand);color:#fff;font-weight:800;cursor:pointer;font-family:inherit}
+  /* login / consent */
+  .center{display:flex;flex-direction:column;justify-content:center;height:100%;padding:28px 22px}
+  .logo{font-size:32px;font-weight:900;color:var(--brand);margin-bottom:2px;letter-spacing:-.01em}
+  input.field{width:100%;padding:14px 16px;border-radius:999px;border:none;background:#fff;font-size:16px;margin-top:10px;font-family:inherit;font-weight:700}
+  .consent{display:flex;gap:10px;align-items:flex-start;padding:11px 0;border-bottom:1.5px dashed var(--line);font-size:13px;font-weight:600}
+  .consent:last-child{border-bottom:none}
+  .consent input{margin-top:3px;transform:scale(1.2);accent-color:var(--brand)}
+  .consent b{display:block;font-weight:800}
+  /* coordinator */
+  .pt{display:flex;align-items:center;gap:12px;padding:13px;border-radius:18px;background:#fff;margin-bottom:9px;box-shadow:0 3px 8px rgba(120,90,60,.07)}
+  .pt .av{width:42px;height:42px;border-radius:50%;background:var(--brand-soft);color:var(--brand);display:flex;align-items:center;justify-content:center;font-weight:900;flex:none}
+  .pt .info{flex:1}
+  .pt .info b{display:block;font-size:14px;font-weight:800}
+  .pt .info span{font-size:12px;color:var(--muted);font-weight:600}
+  .pt.flag{background:var(--danger-soft)}
+  .pt.flag .av{background:var(--danger);color:#fff}
+  /* side panel */
+  .side{width:360px;font-size:13px;color:var(--ink);line-height:1.5}
+  .side h3{margin:0 0 6px;font-size:14px;font-weight:900}
+  .side .card{padding:14px}
+  .side code{background:#fff;padding:1px 5px;border-radius:5px;font-size:12px}
+  .side ul{padding-left:18px;margin:6px 0}
+  .side .jump{display:inline-block;margin:3px 4px 3px 0;padding:5px 11px;border-radius:999px;background:#fff;cursor:pointer;font-size:12px;font-weight:800}
+  .toast{position:absolute;top:70px;left:16px;right:16px;background:var(--ink);color:#fff;padding:12px 16px;border-radius:999px;font-size:13px;font-weight:700;display:none;z-index:9;box-shadow:0 8px 24px rgba(0,0,0,.25)}
+  .toast.on{display:block}
+  @media (max-width:800px){.side{display:none}}
+  /* Oy the moon */
+  .oy{display:flex;align-items:center;gap:14px}
+  .oy svg{width:84px;height:84px;flex:none;filter:drop-shadow(0 4px 10px rgba(0,0,0,.18))}
+  .oy .say{background:#fff;color:var(--ink);border-radius:18px;padding:11px 14px;font-size:13px;line-height:1.4;position:relative;font-weight:700;box-shadow:0 3px 8px rgba(120,90,60,.08)}
+  .oy .say::before{content:"";position:absolute;left:-8px;top:18px;border:8px solid transparent;border-right-color:#fff;border-left:0}
+  .oy .say b{color:var(--brand)}
+  .oy.sm svg{width:44px;height:44px}
+  .oy.sm .say{font-size:12px;padding:8px 10px}
+  .msg.bot .tag.oy-tag{display:flex;align-items:center;gap:4px}
+  .msg.bot .tag.oy-tag svg{width:16px;height:16px}
+  @keyframes bob{0%,100%{transform:translateY(0)}50%{transform:translateY(-3px)}}
+  .oy svg{animation:bob 3s ease-in-out infinite}
+  .phase{display:flex;justify-content:space-between;align-items:flex-end;margin-top:10px}
+  .phase div{text-align:center;font-size:10px;color:var(--muted)}
+  .phase svg{width:26px;height:26px;display:block;margin:0 auto 2px}
+  .phase div.now{color:var(--brand);font-weight:700}
+</style>
+</head>
+<body>
+
+<div class="phone"><div class="screen" id="screen">
+
+  <div class="toast" id="toast"></div>
+
+  <!-- 0 LOGIN -->
+  <div class="view on" id="v-login">
+    <div class="center">
+      <div class="logo">CycleMate</div>
+      <div class="muted">Your IVF cycle, one day at a time.</div>
+      <div class="oy" style="margin-top:18px"><span data-oy="happy"></span><div class="say">Hi, I'm <b>Oy</b>. I'll be with you every day of your cycle.</div></div>
+      <div class="card" style="margin-top:16px">
+        <div class="muted" style="margin-bottom:4px">Sign in with the phone number registered at your clinic</div>
+        <input class="field" placeholder="+998 __ ___ __ __" value="+998 90 123 45 67">
+        <button class="btn" onclick="go('otp')">Send verification code</button>
+      </div>
+      <div class="muted" style="font-size:12px;text-align:center">Only you can access your data. No shared accounts.<br>Runs in any browser. No app store needed.</div>
+    </div>
+  </div>
+
+  <!-- 0b OTP -->
+  <div class="view" id="v-otp">
+    <div class="center">
+      <div class="logo" style="font-size:20px">Verify it's you</div>
+      <div class="muted">We sent a 6-digit code by SMS.</div>
+      <input class="field" placeholder="______" value="482913" style="letter-spacing:8px;text-align:center;font-size:22px">
+      <button class="btn" onclick="go('consent')">Continue</button>
+      <button class="btn ghost small" onclick="go('login')">Back</button>
+    </div>
+  </div>
+
+  <!-- 0c CONSENT -->
+  <div class="view" id="v-consent">
+    <div class="topbar"><div><h1>Your data, your choice</h1><div class="sub">You can change this any time in Settings</div></div></div>
+    <div class="content">
+      <div class="card">
+        <label class="consent"><input type="checkbox" checked disabled><div><b>Clinic can see my check-ins and task completion</b>Required so your coordinator can support you.</div></label>
+        <label class="consent"><input type="checkbox" id="c-partner"><div><b>Share my timeline with my partner</b>Partner sees schedule only, never your mood or messages.</div></label>
+        <label class="consent"><input type="checkbox"><div><b>Use my anonymised data to improve the service</b>Optional. No name, phone or clinic ID attached.</div></label>
+      </div>
+      <div class="card">
+        <h2>How we protect your data</h2>
+        <div class="muted">
+          • Encrypted in transit and at rest<br>
+          • Stored on the clinic's server, not a third party<br>
+          • Deleted 12 months after your cycle ends, or earlier on request<br>
+          • The assistant never diagnoses or changes your treatment
+        </div>
+      </div>
+      <button class="btn" onclick="go('home');toast('Welcome, Dilnoza. Day 7 of your cycle.')">I understand, continue</button>
+    </div>
+  </div>
+
+  <!-- 1 HOME -->
+  <div class="view" id="v-home">
+    <div class="topbar">
+      <div><h1>Hello, Dilnoza</h1><div class="sub">Tue 29 Oct · Stimulation phase</div></div>
+      <div class="lang"><button class="on">EN</button><button>UZ</button><button>RU</button></div>
+    </div>
+    <div class="content">
+      <div class="card" style="background:linear-gradient(160deg,var(--night),var(--night2));color:#fff;border:none">
+        <div class="oy"><span data-oy="calm" data-phase="7"></span><div class="say" id="oy-home">Day 7. The scan on Thursday will make the plan clearer. Until then, just today's three things.</div></div>
+        <div style="display:flex;justify-content:space-between;align-items:flex-end;margin-top:14px">
+          <div><div style="font-size:12px;opacity:.75">Cycle day</div><div class="big">Day 7 <span style="font-size:15px;font-weight:500;opacity:.8">of ~28</span></div></div>
+          <div style="text-align:right;font-size:12px;opacity:.85">Next: <b>Scan &amp; blood test</b><br>Thu 31 Oct, 09:00</div>
+        </div>
+        <div class="phase">
+          <div><span data-moon="1"></span>Start</div>
+          <div class="now"><span data-moon="7"></span>Now</div>
+          <div><span data-moon="14"></span>Retrieval</div>
+          <div><span data-moon="19"></span>Transfer</div>
+          <div><span data-moon="28"></span>Test</div>
+        </div>
+      </div>
+
+      <div class="card">
+        <h2>Today's plan</h2>
+        <div class="task" onclick="tick(this)"><div class="box">✓</div><div><div class="t">Clinic visit — stimulation injection</div><div class="when">09:00 · Room 3 · bring your card</div></div></div>
+        <div class="task" onclick="tick(this)"><div class="box">✓</div><div><div class="t">Folic acid 1 tablet</div><div class="when">After breakfast</div></div></div>
+        <div class="task" onclick="tick(this)"><div class="box">✓</div><div><div class="t">Daily check-in</div><div class="when">Takes 10 seconds</div></div></div>
+        <div class="muted" style="margin-top:10px;font-size:12px">Nothing else today. You're doing well.</div>
+      </div>
+
+      <div class="card" style="border-color:var(--warn)">
+        <h2 style="color:var(--warn)">Coming up — do at home</h2>
+        <div style="font-size:14px"><b>Trigger injection</b> — exact time will be set after Thursday's scan. Usually at night, 36 h before retrieval. We'll send a countdown.</div>
+      </div>
+
+      <div class="card">
+        <h2>Cost so far</h2>
+        <div style="display:flex;justify-content:space-between;font-size:14px"><span>Paid</span><b>8,400,000 UZS</b></div>
+        <div style="display:flex;justify-content:space-between;font-size:14px;color:var(--muted)"><span>Remaining (estimate)</span><span>~6,200,000 UZS</span></div>
+        <div class="muted" style="font-size:12px;margin-top:6px">Questions about cost? Ask the clinic — no surprises.</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- 2 TIMELINE -->
+  <div class="view" id="v-timeline">
+    <div class="topbar"><div><h1>Your cycle</h1><div class="sub">Dates after today are estimates and may move</div></div></div>
+    <div class="content">
+      <div class="card">
+        <div class="tl">
+          <div class="step done"><div class="n">Baseline scan &amp; blood test</div><div class="d">Day 1 · 23 Oct · done</div></div>
+          <div class="step done"><div class="n">Start stimulation injections</div><div class="d">Day 2 · 24 Oct · daily clinic visits</div></div>
+          <div class="step now"><div class="n">Stimulation — monitoring</div><div class="d">Day 7 · today · next scan Thu 31 Oct</div></div>
+          <div class="step"><div class="n">Trigger injection (at home)</div><div class="d">~Day 12 · exact time set by doctor</div></div>
+          <div class="step"><div class="n">Egg retrieval</div><div class="d">~Day 14 · 4–6 Nov · light sedation, 1 visit</div></div>
+          <div class="step"><div class="n">Fertilisation &amp; embryo culture</div><div class="d">Days 14–19 · lab updates sent here</div></div>
+          <div class="step"><div class="n">Embryo transfer</div><div class="d">~Day 19 · 1 visit</div></div>
+          <div class="step"><div class="n">Two-week wait</div><div class="d">Days 19–33 · progesterone at home · remote check-ins</div></div>
+          <div class="step"><div class="n">Pregnancy test</div><div class="d">~Day 33 · blood test at clinic</div></div>
+        </div>
+      </div>
+      <div class="card">
+        <h2>Visits needed</h2>
+        <div style="font-size:14px">For patients outside Tashkent: <b>4 visits</b> are essential (baseline, mid-stimulation scan, retrieval, transfer). Daily injections can be arranged at a partner clinic near you. <span class="pill brand">Ask the clinic</span></div>
+      </div>
+    </div>
+  </div>
+
+  <!-- 3 CHECK-IN -->
+  <div class="view" id="v-checkin">
+    <div class="topbar"><div><h1>Daily check-in</h1><div class="sub">How are you feeling today?</div></div></div>
+    <div class="content">
+      <div class="oy" style="margin-bottom:12px"><span data-oy="calm" id="oy-ci-face"></span><div class="say" id="oy-ci">No right answer here. Just tell me how today feels.</div></div>
+      <div class="card">
+        <div class="moods">
+          <button onclick="mood(this,1)">😞<small>1</small></button>
+          <button onclick="mood(this,2)">😕<small>2</small></button>
+          <button onclick="mood(this,3)">😐<small>3</small></button>
+          <button onclick="mood(this,4)">🙂<small>4</small></button>
+          <button onclick="mood(this,5)">😊<small>5</small></button>
+        </div>
+        <div class="muted" style="font-size:12px">Any symptoms? (optional)</div>
+        <div class="quick">
+          <button onclick="this.classList.toggle('on')">Bloating</button><button>Headache</button><button>Pain</button><button>Can't sleep</button><button>Worried about cost</button>
+        </div>
+        <button class="btn" onclick="submitMood()">Submit</button>
+      </div>
+      <div class="card" id="ci-result" style="display:none"></div>
+      <div class="card">
+        <h2>Last 7 days</h2>
+        <div class="bars">
+          <div style="height:70%"><i>W</i></div><div style="height:80%"><i>T</i></div><div style="height:60%"><i>F</i></div><div style="height:65%"><i>S</i></div><div style="height:50%"><i>S</i></div><div class="low" style="height:35%"><i>M</i></div><div class="low" style="height:30%"><i>T</i></div>
+        </div>
+        <div class="muted" style="font-size:12px;margin-top:24px">Feeling low for 2 days in a row is common around now. Your coordinator sees this and may reach out first.</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- 4 ASK -->
+  <div class="view" id="v-ask">
+    <div class="topbar"><div><h1>Ask the clinic</h1><div class="sub">Oy answers general questions · your doctor answers medical ones</div></div></div>
+    <div class="content">
+      <div class="card">
+        <div class="chat" id="chat">
+          <div class="msg bot"><span class="tag oy-tag"><span data-oy="happy"></span>Oy</span>Hi Dilnoza. Ask me about appointments, what to bring, or what a step involves. Anything about your medication or results goes straight to your doctor.</div>
+        </div>
+        <div class="quick">
+          <button onclick="ask('What should I bring on Thursday?')">What to bring Thursday?</button>
+          <button onclick="ask('Can I eat before the scan?')">Eat before scan?</button>
+          <button onclick="ask('I have mild bloating, is it normal?')">Bloating normal?</button>
+          <button onclick="ask('Can I change my injection dose?')">Change my dose?</button>
+        </div>
+        <div class="inputrow"><input id="q" placeholder="Type a question…"><button onclick="ask(document.getElementById('q').value)">Send</button></div>
+      </div>
+    </div>
+  </div>
+
+  <!-- 5 COORDINATOR -->
+  <div class="view" id="v-coord">
+    <div class="topbar"><div><h1>Coordinator view</h1><div class="sub">Patients sorted by who needs a call first</div></div><span class="pill danger">2 flagged</span></div>
+    <div class="content">
+      <div class="muted" style="font-size:12px;margin-bottom:10px">Priority is suggested from check-in trend, missed tasks and unanswered questions. It never changes treatment — it only orders your call list.</div>
+      <div class="pt flag"><div class="av">D</div><div class="info"><b>Dilnoza K. · Day 7</b><span>Mood 2 → 1 (2 days) · "worried about cost" · Samarkand</span></div><span class="pill danger">Call</span></div>
+      <div class="pt flag"><div class="av">M</div><div class="info"><b>Madina R. · Day 11</b><span>Missed progesterone 2 days · 1 unanswered question</span></div><span class="pill danger">Call</span></div>
+      <div class="pt"><div class="av">N</div><div class="info"><b>Nilufar A. · Day 19</b><span>Transfer tomorrow · mood 4 · all tasks done</span></div><span class="pill ok">OK</span></div>
+      <div class="pt"><div class="av">S</div><div class="info"><b>Sevara T. · Day 3</b><span>Mood 4 · Bukhara · partner clinic arranged</span></div><span class="pill ok">OK</span></div>
+      <div class="pt"><div class="av">G</div><div class="info"><b>Gulnora M. · Day 25</b><span>Two-week wait · mood 3 · remote</span></div><span class="pill warn">Watch</span></div>
+      <div class="card" style="margin-top:12px">
+        <h2>Doctor queue</h2>
+        <div style="font-size:13px">1 medical question waiting: <b>Dilnoza K.</b> — "Can I change my injection dose?" <span class="pill brand">Forwarded 2 min ago</span></div>
+      </div>
+    </div>
+  </div>
+
+  <div class="nav" id="nav" style="display:none">
+    <button onclick="go('home')" data-v="home"><span>🏠</span>Home</button>
+    <button onclick="go('timeline')" data-v="timeline"><span>📅</span>Cycle</button>
+    <button onclick="go('checkin')" data-v="checkin"><span>💬</span>Check-in</button>
+    <button onclick="go('ask')" data-v="ask"><span>❓</span>Ask</button>
+    <button onclick="go('coord')" data-v="coord"><span>👩‍⚕️</span>Clinic</button>
+  </div>
+
+</div></div>
+
+<div class="side">
+  <div class="card">
+    <h3>CycleMate — prototype notes</h3>
+    <div class="muted">Click through on the phone. This panel is for the presenter only.</div>
+    <div style="margin-top:8px">
+      <span class="jump" onclick="go('login')">Login</span><span class="jump" onclick="go('consent')">Consent</span><span class="jump" onclick="go('home')">Home</span><span class="jump" onclick="go('timeline')">Cycle</span><span class="jump" onclick="go('checkin')">Check-in</span><span class="jump" onclick="go('ask')">Ask</span><span class="jump" onclick="go('coord')">Coordinator</span>
+    </div>
+  </div>
+  <div class="card">
+    <h3>Oy — the companion</h3>
+    <div class="muted">A moon, not an embryo. It stands for the <i>cycle</i>, not the outcome: it waxes through stimulation, is full at transfer, and starts again if the cycle fails. Patients are never asked to bond with an embryo. Oy reacts to the daily check-in and fronts the assistant, so "asking the clinic" feels like talking to someone, not filing a ticket.</div>
+  </div>
+  <div class="card">
+    <h3>Problem → feature</h3>
+    <ul>
+      <li><b>Uncertainty</b> ("what happens next?") → Cycle timeline</li>
+      <li><b>Daily load</b> → Today's plan, max 3 tasks</li>
+      <li><b>Feeling alone</b> → 10-second check-in; coordinator reaches out first</li>
+      <li><b>Nowhere to ask</b> → Assistant for general, doctor for medical</li>
+      <li><b>Cost anxiety</b> → Running total, no surprises</li>
+      <li><b>Distance</b> → 4 essential visits; rest remote or at partner clinic</li>
+    </ul>
+  </div>
+  <div class="card">
+    <h3>Where AI is used — and where it isn't</h3>
+    <ul>
+      <li>Classifies questions: <code>general</code> → answers; <code>medical</code> → forwards to doctor. Try "Can I change my dose?"</li>
+      <li>Ranks the coordinator's call list from mood trend + missed tasks.</li>
+      <li>Never diagnoses, never changes a dose, never interprets results.</li>
+    </ul>
+  </div>
+  <div class="card">
+    <h3>Error handling (demo)</h3>
+    <ul>
+      <li>Unknown question → forwarded to a human, never a guess.</li>
+      <li>Offline → tasks cached; reminders fall back to SMS.</li>
+      <li>Wrong phone number → no account, no data exposed.</li>
+    </ul>
+  </div>
+</div>
+
+<script>
+  // ---- Oy the moon -------------------------------------------------
+  // phase: day 1..28 → 0 (new) .. 1 (full at ~day 19) .. back toward new
+  function moonSVG(day, mood, size){
+    const full=19; let p = day<=full ? day/full : Math.max(0,1-(day-full)/(28-full)); // 0..1 lit fraction
+    const r=40, cx=50, cy=50;
+    // terminator ellipse: rx moves from r (new) to -r (full)
+    const k=(0.5-p)*2; const rx=Math.abs(k)*r;
+    const lit = p>=0.5;
+    const path = `M${cx},${cy-r} A${r},${r} 0 0 1 ${cx},${cy+r} A${rx},${r} 0 0 ${lit?1:0} ${cx},${cy-r} Z`;
+    const faces={
+      happy:`<path d="M38 50 q4 -5 8 0" stroke="#5a4232" stroke-width="3.5" fill="none" stroke-linecap="round"/><path d="M54 50 q4 -5 8 0" stroke="#5a4232" stroke-width="3.5" fill="none" stroke-linecap="round"/><path d="M44 60 q6 6 12 0" stroke="#5a4232" stroke-width="3.5" fill="none" stroke-linecap="round"/>`,
+      calm:`<circle cx="42" cy="50" r="2.6" fill="#5a4232"/><circle cx="58" cy="50" r="2.6" fill="#5a4232"/><path d="M45 60 q5 3 10 0" stroke="#5a4232" stroke-width="3.5" fill="none" stroke-linecap="round"/>`,
+      soft:`<path d="M38 52 q4 -3 8 0" stroke="#5a4232" stroke-width="3.5" fill="none" stroke-linecap="round"/><path d="M54 52 q4 -3 8 0" stroke="#5a4232" stroke-width="3.5" fill="none" stroke-linecap="round"/><path d="M46 61 h8" stroke="#5a4232" stroke-width="3.5" fill="none" stroke-linecap="round"/>`,
+      sleepy:`<path d="M38 51 q4 2 8 0" stroke="#5a4232" stroke-width="3.5" fill="none" stroke-linecap="round"/><path d="M54 51 q4 2 8 0" stroke="#5a4232" stroke-width="3.5" fill="none" stroke-linecap="round"/><path d="M45 60 q5 3 10 0" stroke="#5a4232" stroke-width="3.5" fill="none" stroke-linecap="round"/>`
+    };
+    const face = mood ? `<circle cx="36" cy="57" r="4" fill="#f4a09a" opacity=".85"/><circle cx="64" cy="57" r="4" fill="#f4a09a" opacity=".85"/>${faces[mood]||faces.calm}` : '';
+    const stars = mood ? `<circle cx="14" cy="22" r="2" fill="#ffe9a8"/><circle cx="86" cy="30" r="1.5" fill="#ffe9a8"/><circle cx="80" cy="82" r="1.8" fill="#ffe9a8"/>` : '';
+    return `<svg viewBox="0 0 100 100" ${size?`style="width:${size}px;height:${size}px"`:''}>
+      <circle cx="${cx}" cy="${cy}" r="${r}" fill="${mood?'#c9b5c9':'#7d6b86'}"/>
+      <path d="${path}" fill="#ffd27a"/>
+      <circle cx="${cx}" cy="${cy}" r="${r}" fill="none" stroke="#ffd27a" stroke-opacity=".4" stroke-width="2"/>
+      ${face}${stars}</svg>`;
+  }
+  function renderOy(){
+    document.querySelectorAll('[data-oy]').forEach(el=>{
+      el.innerHTML=moonSVG(+(el.dataset.phase||12), el.dataset.oy);
+    });
+    document.querySelectorAll('[data-moon]').forEach(el=>{ el.innerHTML=moonSVG(+el.dataset.moon,null); });
+  }
+  function oySay(id,faceId,text,mood){
+    const s=document.getElementById(id); if(s) s.innerHTML=text;
+    const f=document.getElementById(faceId); if(f){ f.dataset.oy=mood; f.innerHTML=moonSVG(+(f.dataset.phase||7),mood); }
+  }
+  renderOy();
+
+  function go(v){
+    document.querySelectorAll('.view').forEach(x=>x.classList.remove('on'));
+    document.getElementById('v-'+v).classList.add('on');
+    const nav=document.getElementById('nav');
+    nav.style.display=['login','otp','consent'].includes(v)?'none':'flex';
+    nav.querySelectorAll('button').forEach(b=>b.classList.toggle('on',b.dataset.v===v));
+    document.querySelector('.content')&&document.querySelectorAll('.content').forEach(c=>c.scrollTop=0);
+  }
+  let tmr;
+  function toast(t){const el=document.getElementById('toast');el.textContent=t;el.classList.add('on');clearTimeout(tmr);tmr=setTimeout(()=>el.classList.remove('on'),2600);}
+  function tick(el){
+    el.classList.toggle('done');
+    const done=el.parentNode.querySelectorAll('.task.done').length, all=el.parentNode.querySelectorAll('.task').length;
+    if(el.classList.contains('done')){
+      toast('Nice. Your coordinator can see this is done.');
+      oySay('oy-home',null, done===all ? 'That\'s everything for today. Nothing else to carry.' : `${done} of ${all} done. One thing at a time.`,'happy');
+      const h=document.querySelector('#v-home [data-oy]'); h.dataset.oy='happy'; h.innerHTML=moonSVG(7,'happy');
+    }
+  }
+  let m=0;
+  function mood(b,v){
+    m=v;b.parentNode.querySelectorAll('button').forEach(x=>x.classList.remove('on'));b.classList.add('on');
+    const say={1:['I\'m here. You don\'t have to explain.','soft'],2:['Heavy day. That\'s allowed.','soft'],3:['Somewhere in the middle. That\'s honest.','calm'],4:['Good to hear.','happy'],5:['Lovely. I\'ll remember this one.','happy']}[v];
+    oySay('oy-ci','oy-ci-face',say[0],say[1]);
+  }
+  function submitMood(){
+    const r=document.getElementById('ci-result');r.style.display='block';
+    if(!m){r.innerHTML='<div class="muted">Pick a face first.</div>';return;}
+    if(m<=2){r.innerHTML='<span class="pill warn">Flagged</span><div style="margin-top:8px;font-size:14px">Thank you for telling us. This is the second low day in a row, so <b>your coordinator Malika will call you today</b>. You don\'t have to do anything.</div><button class="btn ghost small" onclick="go(\'ask\')">Message the clinic now</button>';toast('Coordinator notified (priority: high)');oySay('oy-ci','oy-ci-face','I\'ve told Malika. She\'ll call you today — you don\'t need to do anything.','soft');}
+    else if(m===3){r.innerHTML='<span class="pill brand">Logged</span><div style="margin-top:8px;font-size:14px">Day 7 is often the hardest stretch. Your next scan is Thursday — after that the plan becomes clearer.</div>';oySay('oy-ci','oy-ci-face','Day 7 is often the hardest stretch. Thursday\'s scan will make the plan clearer.','calm');}
+    else{r.innerHTML='<span class="pill ok">Logged</span><div style="margin-top:8px;font-size:14px">Good to hear. See you Thursday at 09:00.</div>';oySay('oy-ci','oy-ci-face','Noted. See you Thursday at 09:00.','happy');}
+  }
+  const faq=[
+    {k:/bring|thursday/i,a:'Bring your clinic card and ID. The scan and blood test take about 40 minutes. No injection needed before the visit — we do it there.'},
+    {k:/eat|food|fast/i,a:'Yes, you can eat normally before an ultrasound. For the blood test, water is fine; avoid a heavy breakfast.'},
+    {k:/bloat/i,a:'Mild bloating is common during stimulation. If it becomes severe, with vomiting or trouble breathing, call the clinic immediately — I\'ve added this to your check-in so the team is aware.'},
+    {k:/park|address|where/i,a:'Marina Clinic, Tashkent. Entrance from the main street; parking is behind the building.'},
+  ];
+  const medical=/dose|dosage|medic|result|hormone|level|stop|change my|pain|bleed|pill|inject/i;
+  function ask(q){
+    if(!q||!q.trim())return;
+    const c=document.getElementById('chat');
+    c.insertAdjacentHTML('beforeend','<div class="msg me">'+q+'</div>');
+    document.getElementById('q').value='';
+    const hit=faq.find(f=>f.k.test(q));
+    const tag=(mood)=>'<span class="tag oy-tag">'+moonSVG(7,mood,16)+'Oy</span>';
+    setTimeout(()=>{
+      if(medical.test(q)&&!/bloat/i.test(q)){
+        c.insertAdjacentHTML('beforeend','<div class="msg sys">Medical question — forwarded to Dr. Kim</div><div class="msg bot">'+tag('soft')+'That one\'s for your doctor, not me — I never answer about doses or results. Dr. Kim will reply here, usually within 2 hours during clinic time. Please don\'t change a dose on your own.</div>');
+        toast('Forwarded to doctor queue');
+      }else if(hit){
+        c.insertAdjacentHTML('beforeend','<div class="msg bot">'+tag('happy')+hit.a+'</div>');
+      }else{
+        c.insertAdjacentHTML('beforeend','<div class="msg sys">Not sure — sent to your coordinator</div><div class="msg bot">'+tag('calm')+'I don\'t want to guess. Malika will answer you here.</div>');
+      }
+      c.parentNode.parentNode.scrollTop=1e5;
+    },500);
+  }
+</script>
+</body>
+</html>

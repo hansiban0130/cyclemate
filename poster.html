@@ -1,0 +1,317 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>CycleMate Poster</title>
+<link href="https://fonts.googleapis.com/css2?family=Nunito:wght@600;700;800;900&display=swap" rel="stylesheet">
+<style>
+  @page{size:A3 landscape;margin:0}
+  @media print{.poster{transform:none!important;margin:0!important}body{height:auto!important}}
+  :root{--bg:#efe4d6;--card:#fbf6ef;--ink:#4a3b33;--muted:#9a8a7d;--brand:#d9655a;--brand-soft:#f8dcd4;--ok:#5fae84;--ok-soft:#dff0e4;--warn:#e39a4a;--warn-soft:#fbe8cf;--night:#5a4a62;--night2:#3f3550;--line:#eadfd2;--shadow:0 6px 16px rgba(120,90,60,.10)}
+  *{box-sizing:border-box}
+  html,body{margin:0;background:#d9ccba}
+  body{font-family:"Nunito",sans-serif;color:var(--ink);-webkit-print-color-adjust:exact;print-color-adjust:exact}
+  .poster{width:420mm;height:297mm;background:var(--bg);margin:0 auto;padding:7mm 9mm 6mm;display:grid;grid-template-rows:auto 1fr;gap:3.5mm;position:relative;overflow:hidden}
+  @media screen{.poster{margin:20px auto;box-shadow:0 20px 60px rgba(0,0,0,.25);transform-origin:top left}}
+  /* header */
+  .head{display:flex;align-items:center;gap:8mm;padding:0 2mm}
+  .head .logo{font-size:27pt;font-weight:900;color:var(--brand);letter-spacing:-.02em;line-height:1}
+  .head .tag{font-size:14pt;font-weight:800;color:var(--ink);margin-top:1mm}
+  .head .sub{font-size:9.5pt;color:var(--muted);font-weight:700;margin-top:1mm}
+  .head .meta{margin-left:auto;text-align:right;font-size:9pt;color:var(--muted);font-weight:700;line-height:1.5}
+  .head .meta b{color:var(--ink);font-size:10.5pt}
+  .head svg{width:20mm;height:20mm;flex:none}
+  /* columns */
+  .cols{display:grid;grid-template-columns:1fr 1.45fr 1fr;gap:4mm;min-height:0}
+  .col{display:flex;flex-direction:column;gap:3mm;min-height:0}
+  .card{background:var(--card);border-radius:6mm;padding:3.8mm 4.5mm;box-shadow:var(--shadow)}
+  .card h2{margin:0 0 2mm;font-size:8.5pt;font-weight:900;letter-spacing:.12em;text-transform:uppercase;color:var(--brand)}
+  .card h2.n{color:#b8782e}
+  .card h2.g{color:var(--ok)}
+  .card p{margin:0 0 1.6mm;font-size:8.6pt;line-height:1.35;font-weight:600}
+  .card p:last-child{margin-bottom:0}
+  .card ul{margin:0;padding-left:4.5mm;font-size:8.3pt;line-height:1.38;font-weight:600}
+  .card li{margin-bottom:1mm}
+  .card b{font-weight:900}
+  .stats{display:grid;grid-template-columns:repeat(3,1fr);gap:2.5mm;margin:1.5mm 0 2mm}
+  .stat{background:var(--brand-soft);border-radius:4mm;padding:2.5mm 2mm;text-align:center}
+  .stat .v{white-space:nowrap;font-size:17pt;font-weight:900;color:var(--brand);line-height:1}
+  .stat .l{font-size:7.5pt;font-weight:800;color:var(--ink);margin-top:1.5mm;line-height:1.25}
+  .stat .s{font-size:6.5pt;color:var(--muted);font-weight:700;margin-top:1mm}
+  .burden{display:grid;grid-template-columns:1fr 1fr;gap:2mm;margin-top:2mm}
+  .burden div{background:#fff;border-radius:3.5mm;padding:2mm 2.5mm;font-size:7.8pt;font-weight:700;display:flex;gap:2mm;align-items:center}
+  .burden span{font-size:13pt}
+  .pill{display:inline-block;padding:1mm 3mm;border-radius:99px;font-size:7.5pt;font-weight:800;background:var(--brand-soft);color:var(--brand)}
+  /* mapping table */
+  table{width:100%;border-collapse:collapse;font-size:8pt}
+  td{padding:1.4mm 2mm;vertical-align:top;border-bottom:1.5px dashed var(--line);font-weight:600;line-height:1.35}
+  tr:last-child td{border-bottom:none}
+  td:first-child{width:36%;font-weight:800;color:#b8782e}
+  td:first-child span{display:block;font-size:7.5pt;color:var(--muted);font-weight:700}
+  td:last-child b{color:var(--brand)}
+  /* phones */
+  .phones{display:grid;grid-template-columns:repeat(3,1fr);gap:3mm;margin-top:0}
+  .ph{background:#f6efe6;border-radius:8mm;padding:2.5mm;box-shadow:inset 0 0 0 .6mm #e2d5c5, var(--shadow)}
+  .ph .scr{background:var(--bg);border-radius:5mm;padding:3mm 3mm 3mm;min-height:0;font-size:7pt;font-weight:700;color:var(--ink)}
+  .ph .cap{text-align:center;font-size:8pt;font-weight:900;margin-top:2mm;color:var(--ink)}
+  .ph .cap span{display:block;font-weight:700;color:var(--muted);font-size:7pt}
+  .m{background:#fff;border-radius:3.5mm;padding:2.5mm 3mm;margin-top:2mm;box-shadow:0 1mm 3mm rgba(120,90,60,.08)}
+  .m.dark{background:linear-gradient(160deg,var(--night),var(--night2));color:#fff}
+  .oyrow{display:flex;gap:2mm;align-items:center}
+  .oyrow svg{width:11mm;height:11mm;flex:none}
+  .oyrow .say{background:#fff;color:var(--ink);border-radius:3mm;padding:1.5mm 2.5mm;font-size:6.6pt;line-height:1.3;font-weight:700}
+  .day{font-size:17pt;font-weight:900;line-height:1;margin-top:2mm}
+  .ph .phase{display:flex;justify-content:space-between;margin-top:2mm}
+  .ph .phase div{text-align:center;font-size:5.5pt;color:#d8cde0;font-weight:800}
+  .ph .phase div.now{color:#ffd27a}
+  .ph .phase svg{width:6mm;height:6mm;display:block;margin:0 auto .5mm}
+  .task{display:flex;gap:2mm;align-items:center;padding:1.5mm 0;border-bottom:1px dashed var(--line);font-size:6.8pt}
+  .task:last-child{border-bottom:none}
+  .task i{width:4.5mm;height:4.5mm;border-radius:1.5mm;border:.5mm solid #e5d8c8;background:#fff;flex:none;display:flex;align-items:center;justify-content:center;font-style:normal;font-size:6pt}
+  .task.done i{background:var(--ok);border-color:var(--ok);color:#fff}
+  .task.done{color:var(--muted);text-decoration:line-through}
+  .moods{display:flex;justify-content:space-between;margin:1mm 0}
+  .moods div{width:8.5mm;height:9.5mm;border-radius:2.5mm;background:#fff;display:flex;align-items:center;justify-content:center;font-size:10pt;border:.5mm solid transparent}
+  .moods div.on{border-color:var(--brand);background:var(--brand-soft)}
+  .flag{background:var(--warn-soft);border-radius:3mm;padding:2mm 2.5mm;font-size:6.6pt;margin-top:2mm;line-height:1.3}
+  .flag .pill{background:#fff;color:#b8782e;font-size:6pt}
+  .chat .b{background:#fff;border-radius:3mm;border-bottom-left-radius:1mm;padding:1.8mm 2.5mm;font-size:6.5pt;margin-top:1.5mm;max-width:88%;line-height:1.3;box-shadow:0 1mm 3mm rgba(120,90,60,.08)}
+  .chat .me{background:var(--brand);color:#fff;border-radius:3mm;border-bottom-right-radius:1mm;padding:1.8mm 2.5mm;font-size:6.5pt;margin:1.5mm 0 0 auto;max-width:80%;line-height:1.3}
+  .chat .sys{background:var(--warn-soft);color:#b8782e;border-radius:99px;padding:1mm 2.5mm;font-size:6pt;font-weight:900;text-align:center;margin:1.5mm auto 0;width:fit-content}
+  .chat .tg{font-size:5.5pt;color:var(--muted);font-weight:900;letter-spacing:.06em;display:flex;align-items:center;gap:1mm;margin-bottom:.5mm}
+  .chat .tg svg{width:3.5mm;height:3.5mm}
+  /* diagram */
+  .diag{display:grid;grid-template-columns:1fr auto 1.15fr auto 1fr;align-items:center;gap:2mm;margin-top:1mm}
+  .node{border-radius:4mm;padding:2.2mm;text-align:center;font-size:7.6pt;font-weight:800;line-height:1.3}
+  .node small{display:block;font-weight:700;color:var(--muted);font-size:7pt;margin-top:.8mm}
+  .node.p{background:var(--brand-soft)}
+  .node.s{background:#fff;border:.6mm solid var(--brand)}
+  .node.c{background:var(--ok-soft)}
+  .arrow{font-size:14pt;color:var(--muted);text-align:center;font-weight:900}
+  .ai{display:grid;grid-template-columns:1fr 1fr;gap:2.5mm;margin-top:2.5mm}
+  .ai div{background:#fff;border-radius:3.5mm;padding:2mm 2.5mm;font-size:7.4pt;line-height:1.35;font-weight:600}
+  .ai div b{display:block;color:var(--brand);font-size:7.5pt;letter-spacing:.06em;text-transform:uppercase;margin-bottom:.8mm}
+  .nope{background:var(--night);color:#fff;border-radius:3.5mm;padding:2mm 3mm;font-size:7.6pt;font-weight:800;margin-top:2.5mm;line-height:1.35}
+  /* oy card */
+  .oycard{background:linear-gradient(160deg,var(--night),var(--night2));color:#fff}
+  .oycard h2{color:#ffd27a}
+  .oycard p{color:#f1e9f3}
+  .oycard .row{display:flex;gap:4mm;align-items:center}
+  .oycard .big{width:22mm;height:22mm;flex:none}
+  .oycard .cyc{display:flex;justify-content:space-between;margin-top:3mm;background:rgba(255,255,255,.07);border-radius:4mm;padding:2.5mm 3mm}
+  .oycard .cyc div{text-align:center;font-size:6.5pt;font-weight:800;color:#d8cde0;line-height:1.25}
+  .oycard .cyc div b{display:block;color:#fff;font-size:7pt}
+  .oycard .cyc svg{width:9mm;height:9mm;display:block;margin:0 auto 1mm}
+  .oycard .cyc div.now{color:#ffd27a}
+  .oycard .cyc div.now b{color:#ffd27a}
+  .faces{display:flex;gap:2mm;margin-top:3mm;align-items:center}
+  .faces svg{width:9mm;height:9mm}
+  .faces span{font-size:7pt;color:#d8cde0;font-weight:700;margin-left:1mm}
+  /* right col */
+  .two{display:grid;grid-template-columns:1fr 1fr;gap:3mm}
+  .box{background:#fff;border-radius:3.5mm;padding:2mm 2.5mm;font-size:7.5pt;line-height:1.32;font-weight:600}
+  .box b{display:block;font-size:7.5pt;letter-spacing:.06em;text-transform:uppercase;margin-bottom:.8mm;color:var(--muted)}
+  .fb{background:#fff;border-radius:3.5mm;padding:2mm 2.5mm;font-size:7.6pt;font-weight:600;line-height:1.35;margin-top:1.5mm}
+  .fb .q{color:var(--brand);font-weight:800}
+  .kpi{display:grid;grid-template-columns:1fr 1fr 1fr;gap:2mm;margin-top:1mm}
+  .kpi div{background:var(--ok-soft);border-radius:3.5mm;padding:2mm 1.5mm;text-align:center;font-size:7pt;font-weight:800;line-height:1.3}
+  .kpi div b{display:block;font-size:6.5pt;color:var(--ok);letter-spacing:.06em;text-transform:uppercase;margin-bottom:.5mm}
+  /* footer */
+  .foot{display:flex;justify-content:space-between;align-items:flex-end;font-size:6.8pt;color:var(--muted);font-weight:700;line-height:1.4;padding:0 2mm}
+  .foot .refs{max-width:300mm}
+  .foot .nm{text-align:right}
+</style>
+</head>
+<body>
+<div class="poster">
+
+  <!-- HEADER -->
+  <div class="head">
+    <span data-oy="happy" data-phase="7"></span>
+    <div>
+      <div class="logo">CycleMate</div>
+      <div class="tag">Helping IVF patients finish the treatment they started</div>
+      <div class="sub">A web-based companion for the IVF cycle · patient app + coordinator view · EN / UZ / RU</div>
+    </div>
+    <div class="meta"><b>AI in Medicine &amp; Biostatistics</b><br>Mid-term project · My (Digital) Health App<br>Hans · October 2026</div>
+  </div>
+
+  <!-- COLUMNS -->
+  <div class="cols">
+
+    <!-- LEFT: PROBLEM -->
+    <div class="col">
+      <div class="card">
+        <h2>1 · The health problem</h2>
+        <p><b>Infertility</b> affects about <b>1 in 6 adults</b> worldwide (WHO, 2023). IVF is effective — but only when a patient completes the cycle.</p>
+        <p><b>The gap:</b> up to <b>1 in 5 patients drop out</b> of IVF before finishing, and the leading reason is not medical failure. It is the <b>burden of treatment itself</b>. Most who stop never return.</p>
+        <div class="stats">
+          <div class="stat"><div class="v">17%</div><div class="l">of couples drop out mid-treatment</div><div class="s">Verberg 2008, n=384</div></div>
+          <div class="stat"><div class="v">19–28%</div><div class="l">cite physical / psychological burden as the reason</div><div class="s">Gameiro 2012 (n=21,453); Verberg 2008</div></div>
+          <div class="stat"><div class="v">18–27%</div><div class="l">show clinical anxiety or depression during IVF</div><div class="s">China 2025, n=2,465</div></div>
+        </div>
+        <p style="font-size:8.5pt;color:var(--muted)">Anxiety peaks at embryo transfer, not at the start (E-Freeze RCT, UK). The hardest days come late in the cycle.</p>
+      </div>
+
+      <div class="card">
+        <h2>What "burden" actually is</h2>
+        <p style="font-size:8.8pt">From clinic experience in Tashkent and the literature, four things wear patients down:</p>
+        <div class="burden">
+          <div><span>🌫️</span>Uncertainty — "what happens next?"</div>
+          <div><span>📋</span>Daily load — visits, pills, timing</div>
+          <div><span>🕯️</span>Feeling alone between visits</div>
+          <div><span>❓</span>Nowhere to ask a small question</div>
+        </div>
+      </div>
+
+      <div class="card">
+        <h2>Target users</h2>
+        <ul>
+          <li><b>Patients</b> going through an IVF cycle — primary user. Many live far from Tashkent and cannot visit daily.</li>
+          <li><b>Clinic coordinators</b> — see who needs a call first, instead of waiting for patients to reach out.</li>
+          <li><b>Doctors</b> — receive only the questions that need a medical answer.</li>
+        </ul>
+      </div>
+    </div>
+
+    <!-- MIDDLE: SOLUTION -->
+    <div class="col">
+      <div class="card">
+        <h2 class="n">2 · The app — one burden, one feature</h2>
+        <table>
+          <tr><td>Uncertainty<span>"what happens next?"</span></td><td><b>Cycle timeline</b> — today's day, next step, estimated dates; shown as a moon that waxes with the cycle</td></tr>
+          <tr><td>Daily load</td><td><b>Today's plan</b> — never more than 3 tasks; clinic visits, home medication, trigger-shot countdown</td></tr>
+          <tr><td>Feeling alone</td><td><b>10-second check-in</b> — mood 1–5; two low days in a row and the coordinator calls <i>first</i></td></tr>
+          <tr><td>Nowhere to ask</td><td><b>Ask the clinic</b> — Oy answers general questions; anything medical is forwarded to the doctor</td></tr>
+          <tr><td>Cost worry</td><td><b>Running total</b> — paid so far and estimated remaining; no surprises</td></tr>
+        </table>
+      </div>
+
+      <div class="phones">
+        <div class="ph"><div class="scr">
+          <div style="font-size:8pt;font-weight:900">Hello, Dilnoza</div><div style="font-size:5.5pt;color:var(--muted)">Tue 29 Oct · Stimulation phase</div>
+          <div class="m dark">
+            <div class="oyrow"><span data-oy="calm" data-phase="7"></span><div class="say">Day 7. Thursday's scan will make the plan clearer. Until then, just today's three things.</div></div>
+            <div class="day">Day 7 <span style="font-size:7pt;font-weight:700;opacity:.8">of ~28</span></div>
+            <div class="phase"><div><span data-moon="1"></span>Start</div><div class="now"><span data-moon="7"></span>Now</div><div><span data-moon="14"></span>Retrieval</div><div><span data-moon="19"></span>Transfer</div><div><span data-moon="28"></span>Test</div></div>
+          </div>
+          <div class="m"><div style="font-size:5.5pt;letter-spacing:.1em;color:var(--muted);font-weight:900">TODAY'S PLAN</div>
+            <div class="task done"><i>✓</i>Clinic visit — stimulation injection</div>
+            <div class="task"><i></i>Folic acid 1 tablet</div>
+            <div class="task"><i></i>Daily check-in</div>
+          </div>
+        </div><div class="cap">Home<span>where am I in the cycle?</span></div></div>
+
+        <div class="ph"><div class="scr">
+          <div style="font-size:8pt;font-weight:900">Daily check-in</div><div style="font-size:5.5pt;color:var(--muted)">How are you feeling today?</div>
+          <div class="oyrow" style="margin-top:2mm"><span data-oy="soft" data-phase="7"></span><div class="say">Heavy day. That's allowed.</div></div>
+          <div class="m"><div class="moods"><div>😞</div><div class="on">😕</div><div>😐</div><div>🙂</div><div>😊</div></div>
+            <div style="font-size:5.5pt;color:var(--muted);margin-top:1mm">Bloating · Headache · Can't sleep · <b>Worried about cost</b></div>
+          </div>
+          <div class="flag"><span class="pill">Flagged</span><div style="margin-top:1mm">Second low day in a row — <b>your coordinator Malika will call you today.</b> You don't have to do anything.</div></div>
+        </div><div class="cap">Check-in<span>the clinic reaches out first</span></div></div>
+
+        <div class="ph"><div class="scr chat">
+          <div style="font-size:8pt;font-weight:900">Ask the clinic</div><div style="font-size:5.5pt;color:var(--muted)">Oy answers general · doctor answers medical</div>
+          <div class="b" style="margin-top:2mm"><div class="tg"><span data-oy="happy" data-phase="7" data-tiny="1"></span>OY</div>Bring your clinic card and ID. The scan takes about 40 minutes.</div>
+          <div class="me">Can I change my injection dose?</div>
+          <div class="sys">Medical question — forwarded to Dr. Kim</div>
+          <div class="b"><div class="tg"><span data-oy="soft" data-phase="7" data-tiny="1"></span>OY</div>That one's for your doctor, not me. Dr. Kim will reply here within 2 hours. Please don't change a dose on your own.</div>
+        </div><div class="cap">Ask<span>AI knows what it must not answer</span></div></div>
+      </div>
+
+      <div class="card">
+        <h2 class="n">How it works</h2>
+        <div class="diag">
+          <div class="node p">Patient<small>web app · any phone<br>phone-number login</small></div>
+          <div class="arrow">⇄</div>
+          <div class="node s">Clinic server<small>encrypted · on-premise<br>consent-scoped sharing</small></div>
+          <div class="arrow">⇄</div>
+          <div class="node c">Coordinator &amp; doctor<small>call list · doctor queue</small></div>
+        </div>
+        <div class="ai">
+          <div><b>AI 1 · Question router</b>Classifies each message as <i>general</i> (Oy answers from the clinic FAQ) or <i>medical</i> (forwarded to the doctor). Unknown → forwarded, never guessed.</div>
+          <div><b>AI 2 · Call-list ranking</b>Orders the coordinator's list from mood trend, missed tasks and unanswered questions. It changes who gets called first — never the treatment.</div>
+        </div>
+        <div class="nope">The AI never diagnoses, never changes a dose, never interprets a result. Every clinical decision stays with the medical team.</div>
+      </div>
+    </div>
+
+    <!-- RIGHT: TRUST & IMPACT -->
+    <div class="col">
+      <div class="card oycard">
+        <h2>Meet Oy — why a moon</h2>
+        <div class="row">
+          <span class="big" data-oy="happy" data-phase="7"></span>
+          <div>
+            <p style="font-size:8.4pt"><b>A lunar month and an IVF cycle are both about 28 days.</b> Oy waxes through stimulation, is full at embryo transfer, and wanes toward the pregnancy test. One glance at the moon tells a patient where she is — no calendar, no reading.</p>
+          </div>
+        </div>
+        <div class="cyc">
+          <div><span data-moon="1"></span><b>Day 1</b>baseline</div>
+          <div class="now"><span data-moon="7"></span><b>Day 7</b>stimulation</div>
+          <div><span data-moon="14"></span><b>Day 14</b>retrieval</div>
+          <div><span data-moon="19"></span><b>Day 19</b>transfer</div>
+          <div><span data-moon="28"></span><b>Day 28</b>test</div>
+        </div>
+        <p style="font-size:8pt;margin-top:2.5mm"><b>Calm by design.</b> Medical apps often use alerts, red badges and countdowns that raise anxiety. Oy replaces them with a soft, familiar companion who reacts to how the patient feels — so the app lowers fear instead of adding to it.</p>
+        <p style="font-size:8pt"><b>A moon, not an embryo.</b> Oy stands for the <i>cycle</i>, not the outcome. Patients are never asked to bond with an embryo; if a cycle fails, the moon simply begins again.</p>
+        <div class="faces"><span data-oy="happy" data-phase="7"></span><span data-oy="calm" data-phase="7"></span><span data-oy="soft" data-phase="7"></span><span data-oy="sleepy" data-phase="7"></span><span>reacts to check-ins, tasks and questions</span></div>
+      </div>
+
+      <div class="card">
+        <h2 class="g">3 · Privacy, security &amp; ethics</h2>
+        <div class="two">
+          <div class="box"><b>Privacy &amp; security</b>Login only with the phone number registered at the clinic (SMS code). Data encrypted in transit and at rest, stored on the clinic's own server. Patient chooses what to share — partner sees schedule only, never mood or messages. Deleted 12 months after the cycle, or on request.</div>
+          <div class="box"><b>Ethics</b>AI gives general information only; medical questions go to a human. When unsure, it forwards rather than guesses. Flags prioritise a coordinator's calls — they never label or diagnose a patient. The companion is designed to reduce fear, not to build attachment to an outcome.</div>
+        </div>
+      </div>
+
+      <div class="card">
+        <h2 class="g">Equity &amp; access</h2>
+        <ul>
+          <li><b>Web-based, no app store</b> — runs on any low-end phone; reminders fall back to SMS when offline.</li>
+          <li><b>Built for patients outside Tashkent</b> — only 4 visits are essential; remote check-ins and partner clinics cover the rest.</li>
+          <li><b>EN / UZ / RU</b> — icons and one task per screen for low-literacy users.</li>
+        </ul>
+      </div>
+
+      <div class="card">
+        <h2 class="g">Feedback → change · Impact · Next</h2>
+        <div class="fb"><span class="q">Clinic coordinator:</span> "Patients who are struggling rarely message us — they just stop coming." → <b>Added the 2-low-days rule:</b> the coordinator is flagged and calls first, instead of waiting for the patient.</div>
+        <div class="fb"><span class="q">v1 → v3 (self-review):</span> a plain timer-style UI felt clinical and cold → added Oy, warm palette, one task at a time.</div>
+        <div class="kpi"><div><b>Primary</b>cycle completion rate</div><div><b>Secondary</b>check-in trend · time-to-contact</div><div><b>Clinic</b>proactive calls made</div></div>
+        <p style="font-size:7.6pt;margin-top:1.5mm"><b>Next:</b> EMR integration for automatic schedules · partner-clinic network for regional patients · partner mode · pilot with 20 patients, 1 cycle.</p>
+      </div>
+    </div>
+  </div>
+
+</div>
+
+<script>
+  function moonSVG(day, mood, tiny){
+    const full=19; let p = day<=full ? day/full : Math.max(0,1-(day-full)/(28-full));
+    const r=40, cx=50, cy=50; const k=(0.5-p)*2; const rx=Math.abs(k)*r; const lit=p>=0.5;
+    const path=`M${cx},${cy-r} A${r},${r} 0 0 1 ${cx},${cy+r} A${rx},${r} 0 0 ${lit?1:0} ${cx},${cy-r} Z`;
+    const S='stroke="#5a4232" stroke-width="3.5" fill="none" stroke-linecap="round"';
+    const faces={
+      happy:`<path d="M38 50 q4 -5 8 0" ${S}/><path d="M54 50 q4 -5 8 0" ${S}/><path d="M44 60 q6 6 12 0" ${S}/>`,
+      calm:`<circle cx="42" cy="50" r="2.6" fill="#5a4232"/><circle cx="58" cy="50" r="2.6" fill="#5a4232"/><path d="M45 60 q5 3 10 0" ${S}/>`,
+      soft:`<path d="M38 52 q4 -3 8 0" ${S}/><path d="M54 52 q4 -3 8 0" ${S}/><path d="M46 61 h8" ${S}/>`,
+      sleepy:`<path d="M38 51 q4 2 8 0" ${S}/><path d="M54 51 q4 2 8 0" ${S}/><path d="M45 60 q5 3 10 0" ${S}/>`
+    };
+    const face=mood?`<circle cx="36" cy="57" r="4" fill="#f4a09a" opacity=".85"/><circle cx="64" cy="57" r="4" fill="#f4a09a" opacity=".85"/>${faces[mood]||faces.calm}`:'';
+    const stars=(mood&&!tiny)?`<circle cx="14" cy="22" r="2" fill="#ffe9a8"/><circle cx="86" cy="30" r="1.5" fill="#ffe9a8"/><circle cx="80" cy="82" r="1.8" fill="#ffe9a8"/>`:'';
+    return `<svg viewBox="0 0 100 100"><circle cx="${cx}" cy="${cy}" r="${r}" fill="${mood?'#c9b5c9':'#7d6b86'}"/><path d="${path}" fill="#ffd27a"/><circle cx="${cx}" cy="${cy}" r="${r}" fill="none" stroke="#ffd27a" stroke-opacity=".4" stroke-width="2"/>${face}${stars}</svg>`;
+  }
+  document.querySelectorAll('[data-oy]').forEach(el=>{el.innerHTML=moonSVG(+(el.dataset.phase||7),el.dataset.oy,el.dataset.tiny);});
+  document.querySelectorAll('[data-moon]').forEach(el=>{el.innerHTML=moonSVG(+el.dataset.moon,null);});
+</script>
+<script>
+  (function(){ if(!window.matchMedia("screen").matches) return;
+    const p=document.querySelector(".poster");
+    function fit(){ const w=p.offsetWidth,h=p.offsetHeight; const s=Math.min(1,(window.innerWidth-32)/w); p.style.transform="scale("+s+")"; p.style.marginLeft=Math.max(16,(window.innerWidth-w*s)/2)+"px"; document.body.style.height=(h*s+40)+"px"; }
+    fit(); window.addEventListener("resize",fit); })();
+</script>
+</body>
+</html>

@@ -209,7 +209,7 @@
         <div class="task" onclick="tick(this)"><div class="box">✓</div><div><div class="t">Clinic visit — stimulation injection</div><div class="when">09:00 · Room 3 · bring your card</div></div></div>
         <div class="task" onclick="tick(this)"><div class="box">✓</div><div><div class="t">Folic acid 1 tablet</div><div class="when">After breakfast</div></div></div>
         <div class="task" onclick="tick(this)"><div class="box">✓</div><div><div class="t">Daily check-in</div><div class="when">Takes 10 seconds</div></div></div>
-        <div class="muted" style="margin-top:10px;font-size:12px">Nothing else today. You're doing well.</div>
+        <div class="word" style="margin-top:12px;padding:10px 12px;border-radius:14px;background:var(--brand-soft);color:var(--ink);font-size:13px;line-height:1.45"><div style="font-size:10px;letter-spacing:.08em;text-transform:uppercase;color:var(--brand);font-weight:800;margin-bottom:3px">A word for day 7</div><span id="daily-word"></span></div>
       </div>
 
       <div class="card" style="border-color:var(--warn)">
@@ -347,11 +347,45 @@
       <li><b>Nowhere to ask</b> → Assistant for general, doctor for medical</li>
       <li><b>Cost anxiety</b> → Running total, no surprises</li>
       <li><b>Distance</b> → 4 essential visits; rest remote or at partner clinic</li>
+      <li><b>Losing heart</b> → 28 daily words, one per cycle day (today: day 7)</li>
     </ul>
   </div>
 </div>
 
 <script>
+  // 28 daily words — one per cycle day, same for every patient on that day
+  const WORDS=[
+    "Starting is the hardest part, and you've already done it.",
+    "You don't have to feel brave today. Showing up counts.",
+    "One appointment, one pill, one day. That's the whole job.",
+    "Your body is doing quiet, careful work. Let it.",
+    "It's okay to want this a lot. Wanting isn't weakness.",
+    "Tired is a normal response to doing something hard.",
+    "The middle of a cycle is the foggiest part. Fog lifts.",
+    "You are allowed to have a bad day without it meaning anything.",
+    "Nobody is grading you on how calm you feel.",
+    "Rest is part of the treatment, not a break from it.",
+    "Every scan is just information. It's not a verdict.",
+    "You've carried a lot this week. Set some of it down tonight.",
+    "Tomorrow has its own plan. Today only needs today.",
+    "Whatever the numbers say, you did your part exactly right.",
+    "Hope and fear can sit in the same room. Let them.",
+    "There is no correct way to feel right now.",
+    "You are more than this cycle, even when it fills every thought.",
+    "Small steps still move forward.",
+    "Full moon. You've come a long way — breathe here for a moment.",
+    "Waiting is work too. Be gentle with the one doing it.",
+    "You don't have to be positive. You only have to be here.",
+    "Your worth was never on the test.",
+    "Some days the kindest thing is to stop checking and go for a walk.",
+    "What you're feeling has been felt by many women before you. You are not strange.",
+    "Let someone carry a little of this with you today.",
+    "You've done everything that was yours to do.",
+    "Whatever comes, you will still be you — and that is enough.",
+    "The moon begins again. So can you, whenever you're ready."
+  ];
+  const CYCLE_DAY=7;
+  document.getElementById('daily-word').textContent=WORDS[(CYCLE_DAY-1)%28];
   // ---- Oy the moon -------------------------------------------------
   // phase: day 1..28 → 0 (new) .. 1 (full at ~day 19) .. back toward new
   function moonSVG(day, mood, size){
